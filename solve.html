@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Çözümü</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2f3;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: #3b82f6;
+      padding: 20px;
+      color: white;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #bbb;
+    }
+
+    .question-card {
+      margin-bottom: 25px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .choices label {
+      display: block;
+      margin: 5px 0;
+      padding: 5px;
+      cursor: pointer;
+    }
+
+    .finish-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      background: #10b981;
+      color: white;
+      border: none;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">Test Çözümü</div>
+
+<div class="container" id="test-area"></div>
+
+<button class="finish-btn" id="finishBtn">Sınavı Bitir</button>
+
+<script>
+  // URL üzerinden backendden gelen soruları alıyoruz
+  const questions = JSON.parse(localStorage.getItem("questionsData"));
+
+  const testArea = document.getElementById("test-area");
+
+  questions.forEach((q, index) => {
+    let div = document.createElement("div");
+    div.className = "question-card";
+
+    const choicesHTML = q.choices.map(choice => {
+      const letter = choice[0];
+      return `
+        <label>
+          <input type="radio" name="q${index}" value="${letter}">
+          ${choice}
+        </label>
+      `;
+    }).join("");
+
+    div.innerHTML = `
+      <h3>${index + 1}) ${q.question}</h3>
+      <div class="choices">${choicesHTML}</div>
+    `;
+
+    testArea.appendChild(div);
+  });
+
+  document.getElementById("finishBtn").addEventListener("click", () => {
+    let correct = 0;
+    let total = questions.length;
+    let wrong = [];
+
+    questions.forEach((q, i) => {
+      const selected = document.querySelector(\`input[name="q\${i}"]:checked\`);
+      if (selected && selected.value === q.answer) {
+        correct++;
+      } else {
+        wrong.push(q);
+      }
+    });
+
+    localStorage.setItem("result_correct", correct);
+    localStorage.setItem("result_total", total);
+    localStorage.setItem("result_wrong", JSON.stringify(wrong));
+
+    window.location.href = "results.html";
+  });
+
+</script>
+
+</body>
+</html>

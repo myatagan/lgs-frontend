@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LGS Test Sayfası</title>
+
+  <!-- Aynı CSS dosyasını kullanıyoruz -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Test sayfası için hafif ek stil */
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .quiz-item {
+      margin-bottom: 15px;
+      padding: 12px;
+      background: #f7f7f7;
+      border-radius: 8px;
+    }
+    #finishBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Test Sayfası</h1>
+
+    <div id="questions" style="margin-top: 20px;"></div>
+
+    <button id="finishBtn">Testi Bitir</button>
+
+    <div id="results" style="margin-top: 25px;"></div>
+    <button id="backBtn" style="display:none; margin-top: 20px;">
+  Soru Bankasına Geri Dön
+</button> 
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
