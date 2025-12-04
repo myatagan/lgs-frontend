@@ -113,7 +113,7 @@ if (isIndexPage) {
     const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
     const count = document.getElementById("count").value;
 
-const response = await fetch("https://lgssorubankasi.onrender.com/generate", {
+const response = await fetch("https://lgssorubankasi.onrender.com/", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ lesson, topic, difficulty, count })
