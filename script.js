@@ -71,23 +71,17 @@ document.addEventListener("DOMContentLoaded", () => {
     ]
   };
 
-  // ====================================================
-  // =============== INDEX SAYFASI ======================
-  // ====================================================
+  // ==========================================
+  // =========== INDEX SAYFASI ================
+  // ==========================================
 if (isIndexPage) {
 
   const lessonSelect = document.getElementById("lesson");
   const topicSelect  = document.getElementById("topic");
   const generateBtn  = document.getElementById("generateBtn");
-  const questionsDiv = document.getElementById("questions");
-  const resultsDiv   = document.getElementById("results");
 
-  // ❗ INDEX açıldığında her zaman temizle
   localStorage.removeItem("currentQuestions");
-  questionsDiv.innerHTML = "";
-  resultsDiv.innerHTML = "";
 
-  // Konuları doldur
   function fillTopics(lesson) {
     topicSelect.innerHTML = "";
     subjects[lesson].forEach(topic => {
@@ -113,7 +107,7 @@ if (isIndexPage) {
     const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
     const count = document.getElementById("count").value;
 
-const response = await fetch("https://lgssorubankasi.onrender.com/generate", {
+    const response = await fetch("https://lgssorubankasi.onrender.com/generate", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ lesson, topic, difficulty, count })
@@ -128,19 +122,16 @@ const response = await fetch("https://lgssorubankasi.onrender.com/generate", {
       return;
     }
 
-    // Soruları test.html’e göndermek için sakla
     localStorage.setItem("currentQuestions", JSON.stringify(data.questions));
 
-    // test.html'e git
     window.location.href = "test.html";
   });
 }
 
-
-  // ====================================================
-  // =============== TEST SAYFASI ========================
-  // ====================================================
-  if (isTestPage) {
+  // ==========================================
+  // =========== TEST SAYFASI =================
+  // ==========================================
+if (isTestPage) {
 
   const finishBtn = document.getElementById("finishBtn");
   const backBtn   = document.getElementById("backBtn");
@@ -153,51 +144,26 @@ const response = await fetch("https://lgssorubankasi.onrender.com/generate", {
     questionsDiv.innerHTML = "";
     currentQuestions.forEach((q, index) => {
       const div = document.createElement("div");
-      div.className = "quiz-item";
-      const choicesHTML = q.choices.map(c =>
-        `<label><input type="radio" name="q${index}" value="${c[0]}"> ${c}</label><br>`
-      ).join("");
-      div.innerHTML = `<p><b>${index + 1})</b> ${q.question}</p>${choicesHTML}<hr>`;
+      div.innerHTML = `<p>${q.question}</p>`;
       questionsDiv.appendChild(div);
     });
   }
 
   renderQuiz();
 
-  finishBtn.addEventListener("click", () => {
-    let correct = 0;
-    let wrong = [];
-
-    currentQuestions.forEach((q, index) => {
-      const sel = document.querySelector(`input[name="q${index}"]:checked`);
-      const user = sel ? sel.value : null;
-      if (user === q.answer) correct++;
-      else wrong.push({ index, q, user });
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      resultsDiv.innerHTML = "<p>Sonuç ekranı burada olacak.</p>";
+      if (backBtn) backBtn.style.display = "block";
     });
+  }
 
-    let html = `<h2>Sonuç: ${correct}/${currentQuestions.length}</h2>`;
-    wrong.forEach(w => {
-      html += `
-        <div>
-          <p><b>${w.index + 1})</b> ${w.q.question}</p>
-          <p>Senin cevabın: ${w.user ?? "-"}</p>
-          <p>Doğru cevap: ${w.q.answer}</p>
-          <p><i>${w.q.explanation}</i></p>
-        </div><hr>
-      `;
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      localStorage.removeItem("currentQuestions");
+      window.location.href = "index.html";
     });
-
-    resultsDiv.innerHTML = html;
-
-    // Geri dön butonunu aç
-    backBtn.style.display = "block";
-  });
-
-  backBtn.addEventListener("click", () => {
-    localStorage.removeItem("currentQuestions");
-    window.location.href = "index.html";
-  });
+  }
 }
-
 
 });
