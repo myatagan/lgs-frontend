@@ -41,22 +41,26 @@
 <script>
   const correct = localStorage.getItem("result_correct");
   const total = localStorage.getItem("result_total");
-  const wrong = JSON.parse(localStorage.getItem("result_wrong"));
+  const wrong = JSON.parse(localStorage.getItem("result_wrong")) || [];
 
   document.getElementById("score").innerHTML =
     `Doğru Sayısı: <b>${correct} / ${total}</b>`;
 
   const wrongDiv = document.getElementById("wrongList");
 
-  wrong.forEach((q, i) => {
-    wrongDiv.innerHTML += `
-      <div class="wrong-card">
-        <h3>${i + 1}) ${q.question}</h3>
-        <p><b>Doğru Cevap:</b> ${q.answer}</p>
-        <p><b>Çözüm:</b> ${q.explanation}</p>
-      </div>
-    `;
-  });
+  if (wrong.length === 0) {
+    wrongDiv.innerHTML = "<p>Tebrikler 🎉 Tüm soruları doğru yaptınız.</p>";
+  } else {
+    wrong.forEach((q, i) => {
+      wrongDiv.innerHTML += `
+        <div class="wrong-card">
+          <h3>${i + 1}) ${q.question}</h3>
+          <p><b>Doğru Cevap:</b> ${q.correct}</p>
+          <p><b>Çözüm:</b> ${q.explanation}</p>
+        </div>
+      `;
+    });
+  }
 </script>
 
 </body>
