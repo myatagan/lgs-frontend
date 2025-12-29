@@ -1,11 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const questionsDiv = document.getElementById("questions");
   const finishBtn = document.getElementById("finishBtn");
   const backBtn = document.getElementById("backBtn");
 
-  const questions = JSON.parse(localStorage.getItem("currentQuestions") || "[]");
+  // -----------------------------
+  // Soruları localStorage'dan al
+  // -----------------------------
+  const questions = JSON.parse(
+    localStorage.getItem("currentQuestions") || "[]"
+  );
 
-  // Sorular yoksa: mesaj + geri dön
+  // Güvenlik: soru yoksa
   if (!Array.isArray(questions) || questions.length === 0) {
     questionsDiv.innerHTML = `
       <p style="color:red;">
@@ -13,15 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
     `;
     finishBtn.style.display = "none";
-    backBtn.style.display = "inline-block";
-    backBtn.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
+    if (backBtn) backBtn.style.display = "inline-block";
     return;
   }
 
-  // Soruları + şıkları render et
+  // -----------------------------
+  // Soruları + şıkları göster
+  // -----------------------------
   questionsDiv.innerHTML = "";
+
   questions.forEach((q, index) => {
     const card = document.createElement("div");
     card.style.border = "1px solid #ddd";
@@ -47,32 +53,48 @@ document.addEventListener("DOMContentLoaded", () => {
     questionsDiv.appendChild(card);
   });
 
-  // Bitir → sonucu hesapla → results.html'e gönder
+  // -----------------------------
+  // SINAVI BİTİR
+  // -----------------------------
   finishBtn.addEventListener("click", () => {
     let correct = 0;
     const wrong = [];
 
     questions.forEach((q, i) => {
-      const selected = document.querySelector(`input[name="q${i}"]:checked`);
-      const userAns = selected ? selected.value : null;
+      const selected = document.querySelector(
+        `input[name="q${i}"]:checked`
+      );
+      const userAnswer = selected ? selected.value : null;
 
-      if (userAns && userAns === q.answer) {
+      if (userAnswer === q.answer) {
         correct++;
       } else {
         wrong.push({
           question: q.question,
           choices: q.choices,
-          answer: q.answer,
+          answer: q.answer,          // ✅ doğru cevap
           explanation: q.explanation,
-          user: userAns
+          user: userAnswer           // kullanıcının cevabı
         });
       }
     });
 
+    // Sonuçları kaydet
     localStorage.setItem("result_correct", String(correct));
     localStorage.setItem("result_total", String(questions.length));
     localStorage.setItem("result_wrong", JSON.stringify(wrong));
 
+    // Sonuç sayfasına git
     window.location.href = "results.html";
   });
+
+  // -----------------------------
+  // Geri dön
+  // -----------------------------
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      localStorage.removeItem("currentQuestions");
+      window.location.href = "index.html";
+    });
+  }
 });

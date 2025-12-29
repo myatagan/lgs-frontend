@@ -1,17 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===============================
+  // ==================================
   // SAYFA TESPİTİ
-  // ===============================
+  // ==================================
   const generateBtn = document.getElementById("generateBtn");
   const finishBtn   = document.getElementById("finishBtn");
 
   const isIndexPage = !!generateBtn;
   const isTestPage  = !!finishBtn;
 
-  // ===============================
-  // DERS → KONU HARİTASI (GEREKLİ)
-  // ===============================
+  // ==================================
+  // DERS → KONU HARİTASI (TAM)
+  // ==================================
   const subjects = {
     "Mat": [
       "1. Ünite: Çarpanlar ve Katlar",
@@ -35,12 +35,52 @@ document.addEventListener("DOMContentLoaded", () => {
       "5. Ünite: Basit Makineler",
       "6. Ünite: Enerji Dönüşümleri ve Çevre Bilimi",
       "7. Ünite: Elektrik Yükleri ve Elektrik Enerjisi"
+    ],
+    "Tur": [
+      "1. Ünite: Fiilimsiler",
+      "2. Ünite: Cümlenin Öğeleri",
+      "3. Ünite: Fiil Çatısı",
+      "4. Ünite: Sözcükte Anlam",
+      "5. Ünite: Cümlede Anlam",
+      "6. Ünite: Cümle Çeşitleri",
+      "7. Ünite: Yazım Kuralları",
+      "8. Ünite: Paragraf",
+      "9. Ünite: Noktalama İşaretleri",
+      "10. Ünite: Anlatım Bozuklukları"
+    ],
+    "Sos": [
+      "1. Ünite: Bir Kahraman Doğuyor",
+      "2. Ünite: Milli Uyanış",
+      "3. Ünite: Milli Bir Destan – Ya İstiklal Ya Ölüm",
+      "4. Ünite: Atatürkçülük ve Çağdaş Türkiye",
+      "5. Ünite: Demokratikleşme Çabaları",
+      "6. Ünite: Atatürk Dönemi Dış Politika",
+      "7. Ünite: Atatürk'ün Ölümü ve Sonrası"
+    ],
+    "Ing": [
+      "1. Ünite: Friendship",
+      "2. Ünite: Teen Life",
+      "3. Ünite: In The Kitchen",
+      "4. Ünite: On The Phone",
+      "5. Ünite: The Internet",
+      "6. Ünite: Adventures",
+      "7. Ünite: Tourism",
+      "8. Ünite: Chores",
+      "9. Ünite: Science",
+      "10. Ünite: Natural Forces"
+    ],
+    "Dkab": [
+      "1. Ünite: Kader İnancı",
+      "2. Ünite: Zekat ve Sadaka",
+      "3. Ünite: Din ve Hayat",
+      "4. Ünite: Hz. Muhammed'in Örnekliği",
+      "5. Ünite: Kur'an-ı Kerim ve Özellikleri"
     ]
   };
 
-  // ===============================
+  // ==================================
   // INDEX SAYFASI
-  // ===============================
+  // ==================================
   if (isIndexPage) {
 
     const lessonSelect = document.getElementById("lesson");
@@ -98,7 +138,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const data = await res.json();
 
-        if (!data.ok || !Array.isArray(data.questions) || data.questions.length === 0) {
+        if (
+          !data.ok ||
+          !Array.isArray(data.questions) ||
+          data.questions.length === 0
+        ) {
           alert("Soru üretilemedi. Lütfen tekrar deneyin.");
           isGenerating = false;
           generateBtn.disabled = false;
@@ -106,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // 🔥 TEK DOĞRU KAYIT
+        // 🔥 TEK VE DOĞRU KAYIT
         localStorage.setItem(
           "currentQuestions",
           JSON.stringify(data.questions)
@@ -114,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.location.href = "test.html";
 
-      } catch (e) {
+      } catch (err) {
         alert("Sunucuya ulaşılamadı.");
         isGenerating = false;
         generateBtn.disabled = false;
@@ -123,45 +167,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===============================
-  // TEST SAYFASI
-  // ===============================
+  // ==================================
+  // TEST SAYFASI (BURADA SADECE KONTROL)
+  // Asıl render test.js'te
+  // ==================================
   if (isTestPage) {
-
-    const questionsDiv = document.getElementById("questions");
-    const resultsDiv   = document.getElementById("results");
-    const backBtn      = document.getElementById("backBtn");
-
     const questions = JSON.parse(
       localStorage.getItem("currentQuestions") || "[]"
     );
 
     if (!Array.isArray(questions) || questions.length === 0) {
-      questionsDiv.innerHTML = `
-        <p style="color:red;">
-          Soru bulunamadı. Lütfen testi yeniden başlatın.
-        </p>
-      `;
-      finishBtn.style.display = "none";
-      return;
-    }
-
-    questions.forEach((q, i) => {
-      const div = document.createElement("div");
-      div.innerHTML = `<p><b>${i + 1})</b> ${q.question}</p>`;
-      questionsDiv.appendChild(div);
-    });
-
-    finishBtn.addEventListener("click", () => {
-      resultsDiv.innerHTML = "<p>Sonuç ekranı burada olacak.</p>";
-      if (backBtn) backBtn.style.display = "block";
-    });
-
-    if (backBtn) {
-      backBtn.addEventListener("click", () => {
-        localStorage.removeItem("currentQuestions");
-        window.location.href = "index.html";
-      });
+      const qDiv = document.getElementById("questions");
+      if (qDiv) {
+        qDiv.innerHTML = `
+          <p style="color:red;">
+            Soru bulunamadı. Lütfen testi yeniden başlatın.
+          </p>
+        `;
+      }
     }
   }
 });
