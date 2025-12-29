@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isTestPage  = !!finishBtn;
 
   // ===============================
-  // DERS → KONU
+  // DERS → KONU HARİTASI (GEREKLİ)
   // ===============================
   const subjects = {
     "Mat": [
@@ -46,14 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const lessonSelect = document.getElementById("lesson");
     const topicSelect  = document.getElementById("topic");
 
-    let isGenerating = false; // çift tıklama kilidi
-
     function fillTopics(lesson) {
       topicSelect.innerHTML = "";
-      (subjects[lesson] || []).forEach(t => {
+      (subjects[lesson] || []).forEach(topic => {
         const opt = document.createElement("option");
-        opt.value = t;
-        opt.textContent = t;
+        opt.value = topic;
+        opt.textContent = topic;
         topicSelect.appendChild(opt);
       });
     }
@@ -63,41 +61,52 @@ document.addEventListener("DOMContentLoaded", () => {
       fillTopics(lessonSelect.value);
     });
 
+    let isGenerating = false;
+
     generateBtn.addEventListener("click", async () => {
       if (isGenerating) return;
-      isGenerating = true;
 
+      const difficultyInput = document.querySelector(
+        'input[name="difficulty"]:checked'
+      );
+
+      if (!difficultyInput) {
+        alert("Lütfen zorluk seviyesi seçin.");
+        return;
+      }
+
+      isGenerating = true;
       generateBtn.disabled = true;
       generateBtn.textContent = "Oluşturuluyor...";
 
-      const lesson = lessonSelect.value;
-      const topic = topicSelect.value;
-      const difficulty = document.querySelector('input[name="difficulty"]:checked')?.value;
-      const count = document.getElementById("count").value;
+      const payload = {
+        lesson: lessonSelect.value,
+        topic: topicSelect.value,
+        difficulty: difficultyInput.value,
+        count: document.getElementById("count").value
+      };
 
       try {
-        const res = await fetch("https://lgssorubankasi.onrender.com/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ lesson, topic, difficulty, count })
-        });
+        const res = await fetch(
+          "https://lgssorubankasi.onrender.com/generate",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }
+        );
 
         const data = await res.json();
 
-        // 🔥 ALTIN KONTROL – BOŞ TEST ASLA AÇILMAZ
-        if (
-          !data.ok ||
-          !Array.isArray(data.questions) ||
-          data.questions.length === 0
-        ) {
-          alert("Soru üretilemedi. Lütfen birkaç saniye sonra tekrar deneyin.");
+        if (!data.ok || !Array.isArray(data.questions) || data.questions.length === 0) {
+          alert("Soru üretilemedi. Lütfen tekrar deneyin.");
+          isGenerating = false;
           generateBtn.disabled = false;
           generateBtn.textContent = "Test Oluştur";
-          isGenerating = false;
           return;
         }
 
-        // SADECE BURADA KAYDEDİLİR
+        // 🔥 TEK DOĞRU KAYIT
         localStorage.setItem(
           "currentQuestions",
           JSON.stringify(data.questions)
@@ -105,11 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.location.href = "test.html";
 
-      } catch (err) {
-        alert("Sunucuya ulaşılamadı. Lütfen tekrar deneyin.");
+      } catch (e) {
+        alert("Sunucuya ulaşılamadı.");
+        isGenerating = false;
         generateBtn.disabled = false;
         generateBtn.textContent = "Test Oluştur";
-        isGenerating = false;
       }
     });
   }
@@ -127,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.getItem("currentQuestions") || "[]"
     );
 
-    // 🔥 BOŞSA NET DAVRANIŞ
     if (!Array.isArray(questions) || questions.length === 0) {
       questionsDiv.innerHTML = `
         <p style="color:red;">
@@ -138,7 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Soruları göster
     questions.forEach((q, i) => {
       const div = document.createElement("div");
       div.innerHTML = `<p><b>${i + 1})</b> ${q.question}</p>`;
@@ -157,5 +164,4 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }
-
 });
