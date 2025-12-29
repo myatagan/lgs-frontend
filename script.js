@@ -1,10 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const API_URL = "https://lgssorubankasi.onrender.com";
+  // ===============================
+  // SAYFA TESPİTİ
+  // ===============================
+  const generateBtn = document.getElementById("generateBtn");
+  const finishBtn   = document.getElementById("finishBtn");
 
-  const isIndexPage = document.getElementById("generateBtn") !== null;
-  const isTestPage  = document.getElementById("finishBtn") !== null;
+  const isIndexPage = !!generateBtn;
+  const isTestPage  = !!finishBtn;
 
+  // ===============================
+  // DERS → KONU
+  // ===============================
   const subjects = {
     "Mat": [
       "1. Ünite: Çarpanlar ve Katlar",
@@ -18,23 +25,32 @@ document.addEventListener("DOMContentLoaded", () => {
       "5. Ünite: Üçgenler",
       "5. Ünite: Eşlik ve Benzerlik",
       "6. Ünite: Dönüşümler Geometrisi",
-      "6. Ünite: Geometrik Cisimler",
+      "6. Ünite: Geometrik Cisimler"
+    ],
+    "Fen": [
+      "1. Ünite: Mevsimler ve İklim",
+      "2. Ünite: DNA ve Genetik Kod",
+      "3. Ünite: Basınç",
+      "4. Ünite: Madde ve Endüstri",
+      "5. Ünite: Basit Makineler",
+      "6. Ünite: Enerji Dönüşümleri ve Çevre Bilimi",
+      "7. Ünite: Elektrik Yükleri ve Elektrik Enerjisi"
     ]
-    // diğer dersler aynen kalabilir
   };
 
-  // ================= INDEX =================
+  // ===============================
+  // INDEX SAYFASI
+  // ===============================
   if (isIndexPage) {
 
     const lessonSelect = document.getElementById("lesson");
     const topicSelect  = document.getElementById("topic");
-    const generateBtn  = document.getElementById("generateBtn");
 
-    localStorage.removeItem("currentQuestions");
+    let isGenerating = false; // çift tıklama kilidi
 
     function fillTopics(lesson) {
       topicSelect.innerHTML = "";
-      subjects[lesson].forEach(t => {
+      (subjects[lesson] || []).forEach(t => {
         const opt = document.createElement("option");
         opt.value = t;
         opt.textContent = t;
@@ -43,39 +59,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fillTopics(lessonSelect.value);
-
     lessonSelect.addEventListener("change", () => {
       fillTopics(lessonSelect.value);
     });
 
     generateBtn.addEventListener("click", async () => {
-      if (generateBtn.disabled) return;
+      if (isGenerating) return;
+      isGenerating = true;
 
       generateBtn.disabled = true;
       generateBtn.textContent = "Oluşturuluyor...";
 
-      try {
-        const lesson = lessonSelect.value;
-        const topic = topicSelect.value;
-        const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
-        const count = Number(document.getElementById("count").value);
+      const lesson = lessonSelect.value;
+      const topic = topicSelect.value;
+      const difficulty = document.querySelector('input[name="difficulty"]:checked')?.value;
+      const count = document.getElementById("count").value;
 
-        const res = await fetch(`${API_URL}/generate`, {
+      try {
+        const res = await fetch("https://lgssorubankasi.onrender.com/generate", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ lesson, topic, difficulty, count })
         });
 
         const data = await res.json();
 
-        if (!res.ok || !data.ok) {
-          throw new Error(data.error || "Soru üretilemedi.");
+        // 🔥 ALTIN KONTROL – BOŞ TEST ASLA AÇILMAZ
+        if (
+          !data.ok ||
+          !Array.isArray(data.questions) ||
+          data.questions.length === 0
+        ) {
+          alert("Soru üretilemedi. Lütfen birkaç saniye sonra tekrar deneyin.");
+          generateBtn.disabled = false;
+          generateBtn.textContent = "Test Oluştur";
+          isGenerating = false;
+          return;
         }
 
-        if (!Array.isArray(data.questions) || data.questions.length === 0) {
-          throw new Error("Soru listesi boş geldi.");
-        }
-
+        // SADECE BURADA KAYDEDİLİR
         localStorage.setItem(
           "currentQuestions",
           JSON.stringify(data.questions)
@@ -84,48 +106,48 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "test.html";
 
       } catch (err) {
-        alert("Hata: " + err.message);
+        alert("Sunucuya ulaşılamadı. Lütfen tekrar deneyin.");
         generateBtn.disabled = false;
         generateBtn.textContent = "Test Oluştur";
+        isGenerating = false;
       }
     });
   }
 
-  // ================= TEST =================
+  // ===============================
+  // TEST SAYFASI
+  // ===============================
   if (isTestPage) {
 
-    const finishBtn = document.getElementById("finishBtn");
-    const backBtn   = document.getElementById("backBtn");
     const questionsDiv = document.getElementById("questions");
+    const resultsDiv   = document.getElementById("results");
+    const backBtn      = document.getElementById("backBtn");
 
     const questions = JSON.parse(
       localStorage.getItem("currentQuestions") || "[]"
     );
 
-    if (!questions.length) {
-      questionsDiv.innerHTML =
-        "<p>Soru bulunamadı. Lütfen teste yeniden başlayın.</p>";
-      if (finishBtn) finishBtn.style.display = "none";
+    // 🔥 BOŞSA NET DAVRANIŞ
+    if (!Array.isArray(questions) || questions.length === 0) {
+      questionsDiv.innerHTML = `
+        <p style="color:red;">
+          Soru bulunamadı. Lütfen testi yeniden başlatın.
+        </p>
+      `;
+      finishBtn.style.display = "none";
       return;
     }
 
+    // Soruları göster
     questions.forEach((q, i) => {
       const div = document.createElement("div");
-
-      const choices = q.choices.map(c => `
-        <label>
-          <input type="radio" name="q${i}" value="${c[0]}">
-          ${c}
-        </label>
-      `).join("<br>");
-
-      div.innerHTML = `
-        <p><b>${i + 1})</b> ${q.question}</p>
-        ${choices}
-        <hr>
-      `;
-
+      div.innerHTML = `<p><b>${i + 1})</b> ${q.question}</p>`;
       questionsDiv.appendChild(div);
+    });
+
+    finishBtn.addEventListener("click", () => {
+      resultsDiv.innerHTML = "<p>Sonuç ekranı burada olacak.</p>";
+      if (backBtn) backBtn.style.display = "block";
     });
 
     if (backBtn) {
