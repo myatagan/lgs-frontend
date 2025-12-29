@@ -13,7 +13,8 @@
 
   <h1>LGS Soru Bankası</h1>
 
-  <label>Ders</label>
+  <!-- DERS SEÇİMİ -->
+  <label for="lesson">Ders</label>
   <select id="lesson">
     <option value="Mat">Matematik</option>
     <option value="Fen">Fen Bilimleri</option>
@@ -23,31 +24,36 @@
     <option value="Dkab">Din Kültürü ve Ahlak Bilgisi</option>
   </select>
 
-  <label>Konu</label>
+  <!-- KONU SEÇİMİ (script.js doldurur) -->
+  <label for="topic">Konu</label>
   <select id="topic"></select>
 
+  <!-- ZORLUK -->
   <label>Zorluk Seviyesi</label>
   <div class="radio-group">
-    <label><input type="radio" name="difficulty" value="Kolay"> Kolay</label>
-    <label><input type="radio" name="difficulty" value="Orta" checked> Orta</label>
-    <label><input type="radio" name="difficulty" value="Zor"> Zor</label>
+    <label>
+      <input type="radio" name="difficulty" value="Kolay">
+      Kolay
+    </label>
+    <label>
+      <input type="radio" name="difficulty" value="Orta" checked>
+      Orta
+    </label>
+    <label>
+      <input type="radio" name="difficulty" value="Zor">
+      Zor
+    </label>
   </div>
 
-  <label>Soru Sayısı</label>
+  <!-- SORU SAYISI -->
+  <label for="count">Soru Sayısı</label>
   <select id="count">
     <option value="5">5 Soru</option>
     <option value="10">10 Soru</option>
-    <option value="20">20 Soru</option>
   </select>
 
+  <!-- TEST OLUŞTUR -->
   <button id="generateBtn">Test Oluştur</button>
-
-  <button id="finishBtn" style="display:none; margin-left: 10px;">Sınavı Bitir</button>
-
-  <div id="results" style="margin-top: 20px;"></div>
-
-  <!-- Sorular buraya dinamik olarak gelecek -->
-  <div id="questions" style="margin-top: 20px;"></div>
 
 </div>
 

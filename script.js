@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const isTestPage  = !!finishBtn;
 
   // ==================================
-  // DERS → KONU HARİTASI (TAM)
+  // DERS → KONU HARİTASI
   // ==================================
   const subjects = {
     "Mat": [
@@ -136,18 +136,16 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         );
 
+        if (res.status === 429) {
+          alert("Çok fazla istek atıldı. Lütfen kısa bir süre bekleyin.");
+          throw new Error("Rate limit");
+        }
+
         const data = await res.json();
 
-        if (
-          !data.ok ||
-          !Array.isArray(data.questions) ||
-          data.questions.length === 0
-        ) {
+        if (!data.ok || !Array.isArray(data.questions) || data.questions.length === 0) {
           alert("Soru üretilemedi. Lütfen tekrar deneyin.");
-          isGenerating = false;
-          generateBtn.disabled = false;
-          generateBtn.textContent = "Test Oluştur";
-          return;
+          throw new Error("Empty question list");
         }
 
         // 🔥 TEK VE DOĞRU KAYIT
@@ -159,17 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "test.html";
 
       } catch (err) {
-        alert("Sunucuya ulaşılamadı.");
-        isGenerating = false;
         generateBtn.disabled = false;
         generateBtn.textContent = "Test Oluştur";
+        isGenerating = false;
       }
     });
   }
 
   // ==================================
-  // TEST SAYFASI (BURADA SADECE KONTROL)
-  // Asıl render test.js'te
+  // TEST SAYFASI – SADECE BOŞ TEST KONTROLÜ
+  // Asıl iş test.js’te
   // ==================================
   if (isTestPage) {
     const questions = JSON.parse(
