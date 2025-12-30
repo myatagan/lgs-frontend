@@ -7,16 +7,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   generateBtn.addEventListener("click", async () => {
     if (locked) return;
-    locked = true;
-
-    generateBtn.disabled = true;
-    generateBtn.textContent = "Oluşturuluyor...";
 
     const lesson = document.getElementById("lesson").value;
     const topic = document.getElementById("topic").value;
-    const difficulty =
-      document.querySelector('input[name="difficulty"]:checked')?.value;
+    const difficultyInput =
+      document.querySelector('input[name="difficulty"]:checked');
     const count = document.getElementById("count").value;
+
+    // 🔥 ZORUNLU KONTROLLER (400’ü %100 bitirir)
+    if (!lesson || !topic || !count) {
+      alert("Lütfen tüm alanları doldurun.");
+      return;
+    }
+
+    if (!difficultyInput) {
+      alert("Lütfen zorluk seviyesi seçin.");
+      return;
+    }
+
+    const difficulty = difficultyInput.value;
+
+    locked = true;
+    generateBtn.disabled = true;
+    generateBtn.textContent = "Oluşturuluyor...";
 
     try {
       const res = await fetch(
@@ -36,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      if (!data.ok || !data.questions || data.questions.length === 0) {
+      if (!data.ok || !Array.isArray(data.questions) || data.questions.length === 0) {
         alert("Soru üretilemedi.");
         reset();
         return;
@@ -50,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "test.html";
 
     } catch (e) {
-      alert("Sunucu hatası.");
+      alert("Sunucuya ulaşılamadı.");
       reset();
     }
 
