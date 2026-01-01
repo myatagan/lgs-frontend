@@ -2,60 +2,34 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LGS Soru Bankası</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
+<h1>LGS Soru Bankası</h1>
 
-  <h1>LGS Soru Bankası</h1>
+<label>Ders</label>
+<select id="lesson">
+  <option value="Mat">Matematik</option>
+  <option value="Fen">Fen</option>
+</select>
 
-  <!-- DERS SEÇİMİ -->
-  <label for="lesson">Ders</label>
-  <select id="lesson">
-    <option value="Mat">Matematik</option>
-    <option value="Fen">Fen Bilimleri</option>
-    <option value="Tur">Türkçe</option>
-    <option value="Sos">İnkılap Tarihi</option>
-    <option value="Ing">İngilizce</option>
-    <option value="Dkab">Din Kültürü ve Ahlak Bilgisi</option>
-  </select>
+<label>Konu</label>
+<select id="topic"></select>
 
-  <!-- KONU SEÇİMİ (script.js doldurur) -->
-  <label for="topic">Konu</label>
-  <select id="topic"></select>
+<label>Zorluk</label>
+<label><input type="radio" name="difficulty" value="Kolay"> Kolay</label>
+<label><input type="radio" name="difficulty" value="Orta" checked> Orta</label>
+<label><input type="radio" name="difficulty" value="Zor"> Zor</label>
 
-  <!-- ZORLUK -->
-  <label>Zorluk Seviyesi</label>
-  <div class="radio-group">
-    <label>
-      <input type="radio" name="difficulty" value="Kolay">
-      Kolay
-    </label>
-    <label>
-      <input type="radio" name="difficulty" value="Orta" checked>
-      Orta
-    </label>
-    <label>
-      <input type="radio" name="difficulty" value="Zor">
-      Zor
-    </label>
-  </div>
+<label>Soru Sayısı</label>
+<select id="count">
+  <option value="5">5</option>
+  <option value="10">10</option>
+</select>
 
-  <!-- SORU SAYISI -->
-  <label for="count">Soru Sayısı</label>
-  <select id="count">
-    <option value="5">5 Soru</option>
-    <option value="10">10 Soru</option>
-  </select>
-
-  <!-- TEST OLUŞTUR -->
-  <button id="generateBtn">Test Oluştur</button>
-
-</div>
+<button id="generateBtn">Test Oluştur</button>
 
 <script src="script.js"></script>
 </body>
