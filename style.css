@@ -1,57 +1,79 @@
-body {
-  font-family: 'Inter', sans-serif;
-  background: #f7f9fc;
+/* RESET */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Arial, sans-serif;
 }
 
+/* SAYFA GENEL */
+body {
+  background: #f3f4f6;
+  padding: 20px;
+}
+
+/* ANA KUTU (MOBİL DOSTU) */
 .container {
-  max-width: 420px;
-  margin: 30px auto;
-  background: white;
+  max-width: 480px;   /* 🔥 MOBİL UYUMLULUK */
+  margin: auto;
+  background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 10px #d3d3d3;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-h1 {
+/* BAŞLIK */
+h1, h2 {
   text-align: center;
-  color: #324b81;
-  font-size: 22px;
+  margin-bottom: 15px;
 }
 
+/* FORM ELEMANLARI */
 label {
-  font-size: 14px;
-  margin-top: 12px;
   display: block;
+  margin-top: 15px;
+  font-weight: bold;
 }
 
 select, button {
   width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccd4e0;
-  margin-top: 5px;
-}
-
-button {
-  background: #324b81;
-  color: white;
-  margin-top: 20px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #253a6a;
-}
-
-.radio-group {
   margin-top: 8px;
+  padding: 10px;
+  font-size: 16px;
 }
 
-#questions {
-  margin-top: 20px;
-  padding: 10px;
-  background: #eef2ff;
+/* RADIO */
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* BUTON */
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
   border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* SORU ALANI */
+#test div {
+  margin-bottom: 15px;
+}
+
+/* MOBİL EXTRA */
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 15px;
+  }
 }
