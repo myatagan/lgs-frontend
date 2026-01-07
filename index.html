@@ -6,33 +6,39 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="container">
-  <!-- TÜM SAYFA İÇERİĞİ BURADA -->
 
-<h1>LGS Soru Bankası</h1>
+  <h1>LGS Soru Bankası</h1>
 
-<label>Ders</label>
-<select id="lesson">
-  <option value="Mat">Matematik</option>
-  <option value="Fen">Fen</option>
-</select>
+  <label>Ders</label>
+  <select id="lesson">
+    <option value="Mat">Matematik</option>
+    <option value="Fen">Fen Bilimleri</option>
+    <option value="Tur">Türkçe</option>
+    <option value="Sos">İnkılap Tarihi</option>
+    <option value="Ing">İngilizce</option>
+    <option value="Dkab">Din Kültürü</option>
+  </select>
 
-<label>Konu</label>
-<select id="topic"></select>
+  <label>Konu</label>
+  <select id="topic"></select>
 
-<label>Zorluk</label>
-<label><input type="radio" name="difficulty" value="Kolay"> Kolay</label>
-<label><input type="radio" name="difficulty" value="Orta" checked> Orta</label>
-<label><input type="radio" name="difficulty" value="Zor"> Zor</label>
+  <label>Zorluk</label>
+  <label><input type="radio" name="difficulty" value="Kolay"> Kolay</label>
+  <label><input type="radio" name="difficulty" value="Orta" checked> Orta</label>
+  <label><input type="radio" name="difficulty" value="Zor"> Zor</label>
 
-<label>Soru Sayısı</label>
-<select id="count">
-  <option value="5">5</option>
-  <option value="10">10</option>
-</select>
+  <label>Soru Sayısı</label>
+  <select id="count">
+    <option value="5">5</option>
+    <option value="10">10</option>
+  </select>
 
-<button id="generateBtn">Test Oluştur</button>
+  <button id="generateBtn">Test Oluştur</button>
+
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
