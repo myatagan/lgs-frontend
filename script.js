@@ -13,6 +13,7 @@ const subjects = {
     "6. Ünite: Dönüşümler Geometrisi",
     "6. Ünite: Geometrik Cisimler"
   ],
+
   Fen: [
     "1. Ünite: Mevsimler ve İklim",
     "2. Ünite: DNA ve Genetik Kod",
@@ -22,6 +23,7 @@ const subjects = {
     "6. Ünite: Enerji Dönüşümleri ve Çevre Bilimi",
     "7. Ünite: Elektrik Yükleri ve Elektrik Enerjisi"
   ],
+
   Tur: [
     "1. Ünite: Fiilimsiler",
     "2. Ünite: Cümlenin Öğeleri",
@@ -34,6 +36,7 @@ const subjects = {
     "9. Ünite: Noktalama İşaretleri",
     "10. Ünite: Anlatım Bozuklukları"
   ],
+
   Sos: [
     "1. Ünite: Bir Kahraman Doğuyor",
     "2. Ünite: Milli Uyanış",
@@ -43,6 +46,7 @@ const subjects = {
     "6. Ünite: Atatürk Dönemi Dış Politika",
     "7. Ünite: Atatürk'ün Ölümü ve Sonrası"
   ],
+
   Ing: [
     "1. Ünite: Friendship",
     "2. Ünite: Teen Life",
@@ -55,6 +59,7 @@ const subjects = {
     "9. Ünite: Science",
     "10. Ünite: Natural Forces"
   ],
+
   Dkab: [
     "1. Ünite: Kader İnancı",
     "2. Ünite: Zekat ve Sadaka",
@@ -71,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function fillTopics() {
     topic.innerHTML = "";
-    subjects[lesson.value].forEach(t => {
+    (subjects[lesson.value] || []).forEach(t => {
       const o = document.createElement("option");
       o.value = t;
       o.textContent = t;
@@ -112,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
 
-      // 🔒 FRONTEND GÜVENLİK KALKANI
       if (
         !data ||
         !data.ok ||
