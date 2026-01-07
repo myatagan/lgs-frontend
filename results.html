@@ -1,67 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <title>Sonuçlar</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #f3f4f6;
-      padding: 20px;
-    }
-    .result-box {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    .wrong-card {
-      background: #fee2e2;
-      border-left: 5px solid #ef4444;
-      margin: 15px 0;
-      padding: 15px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="result-box">
-  <h1>Sonuçlar</h1>
+<div class="container">
 
-  <h2 id="score"></h2>
+  <h2>Sonuçlar</h2>
 
-  <h3>Yanlış Sorular ve Çözümleri</h3>
+  <h3 id="score"></h3>
+
   <div id="wrongList"></div>
+
+  <button onclick="restart()">Yeni Test</button>
 
 </div>
 
-<script>
-  const correct = localStorage.getItem("result_correct");
-  const total = localStorage.getItem("result_total");
-  const wrong = JSON.parse(localStorage.getItem("result_wrong")) || [];
-
-  document.getElementById("score").innerHTML =
-    `Doğru Sayısı: <b>${correct} / ${total}</b>`;
-
-  const wrongDiv = document.getElementById("wrongList");
-
-  if (wrong.length === 0) {
-    wrongDiv.innerHTML = "<p>Tebrikler 🎉 Tüm soruları doğru yaptınız.</p>";
-  } else {
-    wrong.forEach((q, i) => {
-      wrongDiv.innerHTML += `
-        <div class="wrong-card">
-          <h3>${i + 1}) ${q.question}</h3>
-          <p><b>Doğru Cevap:</b> ${q.answer}</p>
-          <p><b>Çözüm:</b> ${q.explanation}</p>
-        </div>
-      `;
-    });
-  }
-</script>
-
+<script src="results.js"></script>
 </body>
 </html>

@@ -3,12 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const questionsDiv = document.getElementById("questions");
   const finishBtn = document.getElementById("finishBtn");
 
-  
-  if (!questionsDiv) {
-    console.error("questions div bulunamadı");
-    return;
-  }
-
   const questions = JSON.parse(
     localStorage.getItem("questions") || "[]"
   );
@@ -16,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!Array.isArray(questions) || questions.length === 0) {
     questionsDiv.innerHTML =
       "<p style='color:red;'>Soru bulunamadı. Lütfen testi yeniden başlatın.</p>";
-    if (finishBtn) finishBtn.style.display = "none";
+    finishBtn.style.display = "none";
     return;
   }
 
@@ -40,8 +34,35 @@ document.addEventListener("DOMContentLoaded", () => {
     questionsDiv.appendChild(div);
   });
 
+  // SINAVI BİTİR
   finishBtn.addEventListener("click", () => {
-    alert("Sınav tamamlandı (sonuç sayfası bağlanabilir).");
+    let correct = 0;
+    let wrong = [];
+
+    questions.forEach((q, i) => {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const userAnswer = selected ? selected.value : null;
+
+      if (userAnswer === q.answer) {
+        correct++;
+      } else {
+        wrong.push({
+          index: i + 1,
+          question: q.question,
+          userAnswer,
+          correctAnswer: q.answer,
+          explanation: q.explanation
+        });
+      }
+    });
+
+    // Sonuçları sakla
+    localStorage.setItem("result_correct", correct);
+    localStorage.setItem("result_total", questions.length);
+    localStorage.setItem("result_wrong", JSON.stringify(wrong));
+
+    // Sonuç sayfasına git
+    window.location.href = "results.html";
   });
 
 });
